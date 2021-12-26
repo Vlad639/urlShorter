@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="" th:href = "@{/css/user-lk.css}">
+
+	</head>
+	<body>
+
+	<script>
+		let siteName = 'http://localhost:8080/';
+		let timerIsRun = false;
+
+		function returnTextOnUrlTokenText(copyUrlTokenTextDiv, urlTokenDivContent) {
+			copyUrlTokenTextDiv.innerHTML = urlTokenDivContent;
+			timerIsRun = false;
+		}
+
+		function copyShortUrl(shortUrlToken) {
+			var area = document.createElement('textarea');
+			var copyUrlTokenTextDiv = document.getElementById(shortUrlToken);
+
+			document.body.appendChild(area);
+			area.value = siteName + shortUrlToken;
+			area.select();
+			document.execCommand("copy");
+			document.body.removeChild(area);
+
+			urlTokenDivContent = copyUrlTokenTextDiv.innerHTML;
+			copyUrlTokenTextDiv.textContent = "Скопировано";
+
+			if (!timerIsRun) {
+				setTimeout(returnTextOnUrlTokenText, 1000, copyUrlTokenTextDiv, urlTokenDivContent);
+				timerIsRun = true;
+			}
+
+		}
+	</script>
+
+		<div class = "title_div">
+			<h1 id = "title" >Укорачиватель ссылок</h1>
+		</div>
+		
+		<div class = "page_div">
+			<div class = "page_center_div">
+				<form name="search_links" method="post" action="____">
+				<input id  = "search_text_box" type="text" size="50"> <button>Поиск</button>
+				</form>
+			
+			
+				<div class = "user_name_and_settings_div">
+					<div class = "user_name_div">
+						<p id = "user_name">Имя пользователя</p>
+					</div>
+					<div class = "settings_div">
+						<p><a href="__________">Настройки</a></p>
+					</div>
+				</div>
+				
+				<div class = "exit_link_div">
+					<p><a href="__________">Выйти</a></p>
+				</div>
+				
+			
+				<div class = "instrument_panel_div">
+				
+					<div class = "links_instruments">
+						<div class = "select_all_div">
+							<p id = "select_all"><input type="checkbox" name="select_all" value="_______"></p>
+						</div>
+
+						<div class = "delete_button_div">
+							<button><img th:src="@{/images/delete.png}" alt="Удалить"></button>
+						</div>
+
+						<p><a href="#iw-modal" class="iw-modal-btn"><img th:src="@{/images/add.jpg}" alt="Добавить"></a></p>
+					</div>	
+						
+						
+
+						
+						<div class = "page_navigation_div">
+						
+							<p>Ссылок на странице</p>
+							
+							<div class = "links_on_page_selector">
+								<form action="formdata" method="post" name="links_number_show">
+								 <p><select id = "links_numbers_selector" name="links_numbers">
+								  <option>5</option>
+								  <option>10</option>
+								  <option>30</option>
+								  <option>50</option>
+								  <option>100</option>
+								 </select></p>
+								 <p>
+								</form>
+							</div>
+							<div class = "prev_link_page">
+								<input type="image" th:src="@{/images/prev_arrow.png}" alt="Предыдущая страница">
+							</div>
+							
+							
+							<input id  = "links_page_number" type="text" size="1">
+							
+							<div class = "next_pages_button">
+								<input type="image" th:src="@{/images//next_arrow.png}" alt="Следующая страница">
+							</div>
+						</div>
+					
+					
+					
+					</div>
+
+  
+				<div id = "links_div">
+				<table>
+					<tbody>
+					<tr th:each="link : ${links}">
+						<td>
+							<div class = "links_class">
+
+								<div class = "select_link">
+									<p><input type="checkbox" name="select_link" value="_______"></p>
+								</div>
+
+								<div th:id ="${link.urlToken}" class = "url_link_text">
+									<p><a th:id ="${link.urlToken}+_link" th:href="${link.longLink}"> <span th:text="${link.urlToken}"></span> </a></p>
+								</div>
+
+
+								<div class = "link_edit">
+									<form  method="post" action="____">
+										<input id  = "link_edit" type="text" size="50" th:value = "${link.longLink}"> <button>Обновить</button>
+									</form>
+								</div>
+
+								<div class = "copy_link_button">
+									<input type="image" th:attr="onclick=|copyShortUrl('${link.urlToken}')|" th:src="@{/images/copy.png}" alt="Копировать">
+								</div>
+
+							</div>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+
+				
+			</div>
+
+		</div>
+
+
+
+		<!---Разметка для модального окна для добавления новых ссылок---->
+		<div id="iw-modal" class="iw-modal" >
+			<div class="iw-modal-wrapper">
+				<div class="iw-CSS-modal-inner">
+					<div class="iw-modal-header">
+						<h3 class="iw-modal-title">Заголовок</h3>
+						<a href="#close" title="Закрыть" class="iw-close">×</a>
+					</div>
+					<div class="iw-modal-text">
+						<p>Здесь Вы можете разместить свой текст, изображения или формы обратной связи</p>
+						<form name="add_new_link" th:method="post" th:action="@{/user-lk/add-new-link}">
+							<input id  = "add_new_link_textbox" type="text" name="longLink" size="50"> <button>Сократить</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!---end.Разметка для модального окна---->
+
+
+		<!---Разметка для модального окна удаления ссылок---->
+		<div id="delete-link-modal" class="iw-modal">
+			<div class="iw-modal-wrapper">
+				<div class="iw-CSS-modal-inner">
+					<div class="iw-modal-header">
+						<h3 class="iw-modal-title">Удаление ссылки</h3>
+						<a href="#close" title="Закрыть" class="iw-close">×</a>
+					</div>
+					<div class="iw-modal-text">
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<!---end.Разметка для модального окна---->
+
+
+
+
+
+	</body>
+</html>

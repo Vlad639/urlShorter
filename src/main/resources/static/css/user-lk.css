@@ -1,0 +1,240 @@
+#title {
+    color: black;
+    height: 80px;
+    line-height: 80px
+}
+
+
+
+#search_text_box {
+    width: 280px;
+    height: 34px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+
+}
+
+#add_new_link_textbox {
+    width: 350px;
+    height: 34px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+
+}
+
+#link_edit {
+    width: 370px;
+    height: 34px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#select_all{
+    margin-left: 10px;
+}
+
+#links_page_number {
+    width: 36px;
+    height: 34px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#links_numbers_selector {
+    width: 64px;
+    height: 34px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+#links_div{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.exit_link_div {
+    text-align: right;
+}
+
+.links_class {
+    display: flex;
+    flex-direction: row;
+    background-color: #F1F1F1;
+    border: 1px solid black;
+    align-items: center;
+}
+
+
+
+.select_all_div {
+    margin-right: 20px;
+}
+
+.delete_button_div {
+    margin-right: 20px;
+
+}
+
+.user_name_and_settings_div {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.user_name_div {
+    margin-right: 15px;
+
+}
+
+.settings_div {
+}
+
+.page_center_div {
+    text-align: center;
+    width: 900px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.page_div {
+    text-align: center;
+    display: flex;
+    background-size: contain;
+}
+
+.title_div {
+    text-align: center;
+}
+
+.page_navigation_div {
+    float: right;
+    display: flex;
+    align-items: center;
+}
+
+
+.links_instruments {
+    display: flex;
+    float: left;
+    align-items: center;
+}
+
+.prev_link_page{
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.next_pages_button{
+    margin-left: 15px;
+}
+
+.links_on_page_selector{
+    margin-left: 15px;
+}
+
+.url_link_text{
+    min-width: 100px;
+}
+
+.copy_link_button{
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+.select_link{
+    margin-left: 15px;
+}
+
+.delete_link_button{
+    margin-right: 15px;
+}
+
+
+body {background-color: powderblue;}
+
+/********Модальное окно************/
+
+/*CSS-свойства для заднего фона модального окна*/
+.iw-modal {
+    opacity: 0; /*изначально этот блок должен быть прозрачным*/
+    background: rgba(0,0,0,0.7); /*задаём цвет фона*/
+    pointer-events: none; /*делаем чтобы по элементу нельзя было кликнуть когда он прозрачный*/
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 9999;
+    transition: all 0.5s ease;
+    margin: 0;
+    padding: 0;
+}
+
+.iw-modal:target {
+    opacity: 1; /*при клике окно становится видимым*/
+    pointer-events: auto; /*теперь по окну можно кликать мышкой*/
+    overflow-y: auto; /*прокрутка по вертикли страницы*/
+}
+
+.iw-modal-wrapper {
+    margin:auto; /*выравниваем окно по центру по горизонтали*/
+    margin-top:25vh; /*отступ сверху можно задавать в px, % или vh*/
+}
+
+/*CSS-свойства для блока, содержащего контент модального окна */
+.iw-CSS-modal-inner {
+    position: relative;
+    background: #fff; /*цвет фона*/
+    border: 1px solid #ccc; /*цвет и толщина рамки*/
+    border-radius: 0px; /*радиус скругления углов*/
+
+}
+
+/*CSS-свойства заголовка модального окна */
+.iw-modal-header {
+    padding: 15px;/*внутренний отступ*/
+    background:#f1f1f1;/*цвет фона*/
+    position:relative;
+}
+.iw-modal-title {
+    font-size: 18px; /*размер шрифта*/
+    color:#555; /*цвет шрифта*/
+    font-weight:bold; /*жирность шрифта*/
+    line-height: 1.5; /*высота строки*/
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/*CSS для кнопки закрытия окна*/
+.iw-close {
+    position:absolute;
+    top:15px; /*отступ сверху*/
+    right:10px; /*отступ справа*/
+    font-size: 24px; /*размер шрифта*/
+    color: #555; /*цвет шрифта*/
+    text-decoration: none;
+}
+
+.iw-close:hover, .iw-close:focus {
+    color: #000; /*цвет шрифта при наведении*/
+    cursor: pointer;
+}
+
+/*CSS для блока с текстом модального окна*/
+
+.iw-modal-text {
+    padding: 15px 20px; /*внутренний отступ*/
+}
+
+/**MEDIA**/
+@media (min-width: 550px) {
+    .iw-modal-wrapper {
+        max-width: 500px;
+    }
+}
+/**end.Модальное окно**/
