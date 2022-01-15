@@ -1,40 +1,10 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="" th:href = "@{/css/user-lk.css}">
-
+		<link rel="stylesheet" type="text/css" th:href = "@{/css/user-lk.css}">
+		<script type="text/javascript" th:src="@{/jQuery.js}"></script>
 	</head>
 	<body>
-
-	<script>
-		let siteName = 'http://localhost:8080/';
-		let timerIsRun = false;
-
-		function returnTextOnUrlTokenText(copyUrlTokenTextDiv, urlTokenDivContent) {
-			copyUrlTokenTextDiv.innerHTML = urlTokenDivContent;
-			timerIsRun = false;
-		}
-
-		function copyShortUrl(shortUrlToken) {
-			var area = document.createElement('textarea');
-			var copyUrlTokenTextDiv = document.getElementById(shortUrlToken);
-
-			document.body.appendChild(area);
-			area.value = siteName + shortUrlToken;
-			area.select();
-			document.execCommand("copy");
-			document.body.removeChild(area);
-
-			urlTokenDivContent = copyUrlTokenTextDiv.innerHTML;
-			copyUrlTokenTextDiv.textContent = "Скопировано";
-
-			if (!timerIsRun) {
-				setTimeout(returnTextOnUrlTokenText, 1000, copyUrlTokenTextDiv, urlTokenDivContent);
-				timerIsRun = true;
-			}
-
-		}
-	</script>
 
 		<div class = "title_div">
 			<h1 id = "title" >Укорачиватель ссылок</h1>
@@ -42,37 +12,51 @@
 		
 		<div class = "page_div">
 			<div class = "page_center_div">
-				<form name="search_links" method="post" action="____">
-				<input id  = "search_text_box" type="text" size="50"> <button>Поиск</button>
+
+				<div>
+					<input id  = "search_text_box" type="text" name = "linkFragment" >
+					<button onClick="searchLinks()">Поиск</button>
+				</div>
+
+				<p th:text="${searchLinksMessage}"> </p>
+
+				<form th:method="post" th:action="@{/user-lk}">
+					<button id = "reset_search">Сбросить поиск</button>
 				</form>
 			
 			
 				<div class = "user_name_and_settings_div">
 					<div class = "user_name_div">
-						<p id = "user_name">Имя пользователя</p>
+						<p id = "user_name" th:text = "${userEmail}"></p>
 					</div>
 					<div class = "settings_div">
-						<p><a href="__________">Настройки</a></p>
+						<p><a th:href="@{/user-lk/settings}">Настройки</a></p>
 					</div>
 				</div>
 				
 				<div class = "exit_link_div">
-					<p><a href="__________">Выйти</a></p>
+					<form th:action="@{/logout}" method="post">
+						<input type="submit" value="Выйти"/>
+					</form>
+
 				</div>
 				
-			
-				<div class = "instrument_panel_div">
+			<div id = "instrument_and_links_table_id" th:fragment = "instrument_and_links_table">
+
+				<div id = "instrument_panel_div" th:fragment = "instrument_panel">
 				
 					<div class = "links_instruments">
 						<div class = "select_all_div">
-							<p id = "select_all"><input type="checkbox" name="select_all" value="_______"></p>
+							<p ><input onClick="selectAllLinks() " id = "selectAll" type="checkbox" name="select_all" ></p>
 						</div>
 
 						<div class = "delete_button_div">
-							<button><img th:src="@{/images/delete.png}" alt="Удалить"></button>
+							<button onclick="window.location.href = '#delete-link-modal'"><img th:src="@{/images/delete.png}" alt="Удалить"></button>
 						</div>
 
-						<p><a href="#iw-modal" class="iw-modal-btn"><img th:src="@{/images/add.jpg}" alt="Добавить"></a></p>
+						<div class = "add_new_link_button_div">
+							<button onclick="window.location.href = '#iw-modal'" id = "add_new_link_button" th:disabled ="${userIsBlocked}"> </button>
+						</div>
 					</div>	
 						
 						
@@ -82,36 +66,33 @@
 						
 							<p>Ссылок на странице</p>
 							
-							<div class = "links_on_page_selector">
-								<form action="formdata" method="post" name="links_number_show">
-								 <p><select id = "links_numbers_selector" name="links_numbers">
-								  <option>5</option>
-								  <option>10</option>
-								  <option>30</option>
-								  <option>50</option>
-								  <option>100</option>
-								 </select></p>
-								 <p>
-								</form>
+							<div class = "links_on_page_selector" th:with="listLinksNumbers = ${ {5, 10, 30, 50, 100, -1} }">
+
+								<select id = "links_numbers_selector" onChange ="changeLinksNumbersOnPage(value)">
+									<option th:each="elem : ${listLinksNumbers}"
+											th:value="${elem}"
+											th:text="${elem > 0} ? ${elem} : 'Все' "
+											th:selected="${elem == linkNumbersInSelector}"
+									</option>
+								</select>
+
 							</div>
 							<div class = "prev_link_page">
-								<input type="image" th:src="@{/images/prev_arrow.png}" alt="Предыдущая страница">
+								<input onClick="prevLinksPage()" type="image" th:src="@{/images/prev_arrow.png}" alt="Предыдущая страница">
 							</div>
-							
-							
-							<input id  = "links_page_number" type="text" size="1">
+
+							<input id = "page_numbers_textbox" th:value = "${pageNumber}" type="text" readonly>
 							
 							<div class = "next_pages_button">
-								<input type="image" th:src="@{/images//next_arrow.png}" alt="Следующая страница">
+								<input  onClick="nextLinksPage()" type="image" th:src="@{/images/next_arrow.png}" alt="Следующая страница">
 							</div>
 						</div>
 					
 					
 					
 					</div>
-
   
-				<div id = "links_div">
+				<div id = "links_div" th:fragment="links_table">
 				<table>
 					<tbody>
 					<tr th:each="link : ${links}">
@@ -119,7 +100,8 @@
 							<div class = "links_class">
 
 								<div class = "select_link">
-									<p><input type="checkbox" name="select_link" value="_______"></p>
+									<p><input type="checkbox" th:checkBoxLinkId = "${link.id}"
+											  class = "linkChechBox" name="select_link"></p>
 								</div>
 
 								<div th:id ="${link.urlToken}" class = "url_link_text">
@@ -128,9 +110,9 @@
 
 
 								<div class = "link_edit">
-									<form  method="post" action="____">
-										<input id  = "link_edit" type="text" size="50" th:value = "${link.longLink}"> <button>Обновить</button>
-									</form>
+									<input class="long_link_textBox" th:id ="${link.id}+_update_text_box" type="text" size="50" th:value = "${link.longLink}" th:readonly ="${userIsBlocked}">
+									<button th:attr="onclick=|UpdateLink('${link.id}')|"
+											th:disabled ="${userIsBlocked}">Обновить</button>
 								</div>
 
 								<div class = "copy_link_button">
@@ -146,7 +128,7 @@
 				
 			</div>
 
-		</div>
+			</div>
 
 
 
@@ -159,10 +141,9 @@
 						<a href="#close" title="Закрыть" class="iw-close">×</a>
 					</div>
 					<div class="iw-modal-text">
-						<p>Здесь Вы можете разместить свой текст, изображения или формы обратной связи</p>
-						<form name="add_new_link" th:method="post" th:action="@{/user-lk/add-new-link}">
-							<input id  = "add_new_link_textbox" type="text" name="longLink" size="50"> <button>Сократить</button>
-						</form>
+
+						<input id  = "add_new_link_textbox" type="text" name="longLink" size="50" th:disabled ="${userIsBlocked}">
+						<button onclick="addNewLink()" th:disabled ="${userIsBlocked}">Сократить</button>
 					</div>
 				</div>
 			</div>
@@ -179,15 +160,177 @@
 						<a href="#close" title="Закрыть" class="iw-close">×</a>
 					</div>
 					<div class="iw-modal-text">
-
+						<p>Удалить выбранные ссылки?</p>
+						<button onclick="deleteSelectedUrl()">ДА</button>
+						<button onclick="window.location.href = '#close'">НЕТ</button>
 					</div>
 				</div>
 			</div>
 		</div>
 		<!---end.Разметка для модального окна---->
 
+			<script th:inline = "javascript">
+
+				let siteName = 'http://localhost:8080/short/';
+				let timerIsRun = false;
+				let checkBoxes = document.getElementsByClassName('linkChechBox');
 
 
+				function returnTextOnUrlTokenText(copyUrlTokenTextDiv, urlTokenDivContent) {
+					copyUrlTokenTextDiv.innerHTML = urlTokenDivContent;
+					timerIsRun = false;
+				}
+
+				function copyShortUrl(shortUrlToken) {
+					var area = document.createElement('textarea');
+					var copyUrlTokenTextDiv = document.getElementById(shortUrlToken);
+
+					document.body.appendChild(area);
+					area.value = siteName + shortUrlToken;
+					area.select();
+					document.execCommand("copy");
+					document.body.removeChild(area);
+
+					urlTokenDivContent = copyUrlTokenTextDiv.innerHTML;
+					copyUrlTokenTextDiv.textContent = "Скопировано";
+
+					if (!timerIsRun) {
+						setTimeout(returnTextOnUrlTokenText, 1000, copyUrlTokenTextDiv, urlTokenDivContent);
+						timerIsRun = true;
+					}
+
+				}
+
+				function selectAllLinks(){
+					setedValue = true;
+					if (document.getElementById("selectAll").checked){
+						setedValue = true;
+					} else setedValue = false;
+
+					for (var i = 0; i < checkBoxes.length; i++) {
+						checkBoxes[i].checked = setedValue;
+					}
+				}
+
+				function deleteSelectedUrl(){
+
+					document.location.href = "#close";
+
+					var selectedLinks = [];
+					for (var i = 0; i < checkBoxes.length; i++) {
+						var iterCheckBox = checkBoxes[i];
+						if (iterCheckBox.checked){
+							selectedLinks.push(Number(iterCheckBox.getAttribute('checkBoxLinkId')));
+						}
+					}
+
+
+					$.ajax({
+						type: 'get',
+						url: '/user-lk/delete-links',
+						data: {deleted_array_links: selectedLinks},
+						success: function(data){
+							$("#instrument_and_links_table_id").html(data);
+						},
+
+					})
+
+				}
+
+				function addNewLink() {
+					document.location.href = "#close";
+					longLink = document.getElementById("add_new_link_textbox").value;
+
+					$.ajax({
+						type: 'get',
+						url: '/user-lk/add-new-link',
+						data: {longLink: longLink},
+						success: function(data){
+							$("#instrument_and_links_table_id").html(data);
+						},
+
+					})
+
+					document.getElementById("add_new_link_textbox").value = "";
+
+				}
+
+				function UpdateLink(linkId) {
+
+					newLongLinkText = document.getElementById(linkId+"_update_text_box").value;
+
+					$.ajax({
+						type: 'get',
+						url: '/user-lk/update-link',
+						data: {	link_id: linkId,
+								new_long_link: newLongLinkText},
+
+						success: function(data){
+							$("#instrument_and_links_table_id").html(data);
+						},
+
+					})
+
+				}
+
+				function changeLinksNumbersOnPage(linkOnPage) {
+
+					$.ajax({
+						type: 'get',
+						url: '/user-lk/change-links-page',
+						data: {links_on_page: linkOnPage},
+						success: function(data){
+							$("#instrument_and_links_table_id").html(data);
+						},
+
+					})
+
+				}
+
+				function nextLinksPage() {
+
+					$.ajax({
+						type: 'get',
+						url: '/user-lk/next-links-page',
+						success: function(data){
+							$("#instrument_and_links_table_id").html(data);
+						},
+
+					})
+
+				}
+
+				function prevLinksPage() {
+
+					$.ajax({
+						type: 'get',
+						url: '/user-lk/prev-links-page',
+						success: function(data){
+							$("#instrument_and_links_table_id").html(data);
+						},
+
+					})
+
+				}
+
+				function searchLinks(){
+					linkFragment = document.getElementById("search_text_box").value;
+
+					$.ajax({
+						type: 'get',
+						url: '/user-lk/search',
+						data: {linkFragment: linkFragment},
+						success: function(data){
+							$("#instrument_and_links_table_id").html(data);
+						},
+
+					})
+				}
+
+				changeLinksNumbersOnPage(10);
+
+
+			</script>
 
 
 	</body>

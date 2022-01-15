@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" th:href = "@{/css/admin-lk.css}">
+	<script type="text/javascript" th:src="@{/jQuery.js}"></script>
+</head>
+<body>
+
+<div class = "title_div">
+	<h1 id = "title" >Укорачиватель ссылок</h1>
+</div>
+
+<div class = "page_div">
+	<div class = "page_center_div">
+
+		<div class = "user_name_and_settings_div">
+			<div class = "user_name_div">
+				<p id = "user_name" th:text = "${userEmail}"></p>
+			</div>
+			<div class = "settings_div">
+				<p><a th:href="@{/admin-lk/settings}">Настройки</a></p>
+			</div>
+		</div>
+
+		<div class = "exit_link_div">
+			<form th:action="@{/logout}" method="post">
+				<input type="submit" value="Выйти"/>
+			</form>
+		</div>
+
+		<div>
+			<label for="email_text_box">Почта (содержит)</label><input id  = "email_text_box" type="text" >
+
+			<div>
+				<select id = "search_role_selector">
+					<option value="user">Пользователь</option>
+					<option value="admin">Администратор</option>
+					<option value="all" selected>Не важно</option>
+				</select>
+			</div>
+
+			<div>
+				<label for="email_text_box">Заблокирован</label><input id = "user_blocked_search" type="checkbox">
+			</div>
+
+			<button onClick="searchUsers()" id = "users_search_button" >Поиск</button>
+		</div>
+
+
+		<form th:method="post" th:action="@{/admin-lk/users-redaktor}">
+			<button id = "reset_search">Сбросить поиск</button>
+		</form>
+
+
+
+
+
+		<div id = "instrument_panel_div">
+
+		</div>
+
+
+
+		<div id = "users_div" th:fragment = "users_table">
+			<table>
+				<thead>
+				<tr>
+					<th>Id</th>
+					<th>Почта</th>
+					<th>Пароль</th>
+					<th>Заблокирован</th>
+					<th>Роль</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr th:each="user: ${foundedUsers}">
+					<td th:text="${user.id}"></td>
+					<td th:text="${user.email}"></td>
+					<td th:text="${user.password}"></td>
+					<td> <input th:id = "checkbox_+${user.id}" type="checkbox" th:onChange="|changeUserBlocked('${user.id}')|" th:checked="${user.isBlocked}" /> </td>
+					<td>
+						<select th:onChange="|changeUserRole('${user.id}', value)|">
+							<option th:selected="${user.role == 'user'}" value="user">Пользователь</option>
+							<option th:selected="${user.role == 'admin'}" value="admin">Администратор</option>
+						</select>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+
+		</div>
+
+
+
+		<script th:inline = "javascript">
+
+			function searchUsers(){
+				emailFragment = document.getElementById("email_text_box").value;
+				role = document.getElementById("search_role_selector").value;
+				blocked = document.getElementById("user_blocked_search").checked;
+
+				$.ajax({
+					type: 'get',
+					url: '/admin-lk/users-redaktor/search',
+					data: {	user_email: emailFragment,
+							user_role: role,
+							user_blocked: blocked},
+					success: function(data){
+						$("#users_div").html(data);
+					},
+				})
+			}
+
+			function changeUserBlocked(userId) {
+				userBlocked = document.getElementById("checkbox_" + userId).checked;
+
+				$.ajax({
+					type: 'get',
+					url: '/admin-lk/users-redaktor/set-user-blocked',
+					data: {	user_id: userId,
+							user_blocked: userBlocked},
+					success: function(data){
+						$("#users_div").html(data);
+					},
+				})
+
+
+			}
+
+			function changeUserRole(userId, userRole) {
+				$.ajax({
+					type: 'get',
+					url: '/admin-lk/users-redaktor/set-user-role',
+					data: {	user_id: userId,
+							user_role: userRole},
+					success: function(data){
+						$("#users_div").html(data);
+					},
+				})
+
+
+			}
+
+
+
+		</script>
+
+
+</body>
+</html>

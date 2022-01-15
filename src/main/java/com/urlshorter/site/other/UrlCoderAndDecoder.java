@@ -1,4 +1,4 @@
-package com.urlshorter.site.models;
+package com.urlshorter.site.other;
 
 import org.hashids.Hashids;
 

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" th:href = "@{/css/admin-lk.css}">
+	<script type="text/javascript" th:src="@{/jQuery.js}"></script>
+</head>
+<body>
+
+<div class = "title_div">
+	<h1 id = "title" >Укорачиватель ссылок</h1>
+</div>
+
+<div class = "page_div">
+	<div class = "page_center_div">
+
+		<div class = "user_name_and_settings_div">
+			<div class = "user_name_div">
+				<p id = "user_name" th:text = "${userEmail}"></p>
+			</div>
+			<div class = "settings_div">
+				<p><a th:href="@{/admin-lk/settings}">Настройки</a></p>
+			</div>
+		</div>
+
+		<div class = "exit_link_div">
+			<form th:action="@{/logout}" method="post">
+				<input type="submit" value="Выйти"/>
+			</form>
+		</div>
+
+	<div>
+		<input id  = "long_url_text_box" type="text">
+		<button onClick="searchLinks()">Поиск</button>
+
+		<form id = ""th:method="post" th:action="@{/admin-lk/links-redaktor}">
+			<button id = "reset_search">Сбросить поиск</button>
+		</form>
+	</div>
+
+
+
+
+
+
+		<div id = "instrument_panel_div">
+
+
+			<div class = "links_instruments">
+				<div class = "select_all_div">
+					<p ><input onClick="selectAllLinks() " id = "selectAll" type="checkbox" name="select_all" ></p>
+				</div>
+
+				<div class = "delete_button_div">
+					<button onclick="window.location.href = '#delete-link-modal'"><img th:src="@{/images/delete.png}" alt="Удалить"></button>
+				</div>
+
+			</div>
+
+
+		</div>
+
+
+
+		<div id = "links_div" th:fragment = "links_table_div">
+			<table>
+				<tbody>
+				<tr th:each="link : ${links}">
+					<td>
+						<div class = "links_class">
+
+							<div class = "select_link">
+								<p><input type="checkbox" th:checkBoxLinkId = "${link.id}"
+										  class = "linkChechBox" name="select_link" value="_______"></p>
+							</div>
+
+							<div th:id ="${link.urlToken}" class = "url_link_text">
+								<p><a th:id ="${link.urlToken}+_link" th:href="${link.longLink}"> <span th:text="${link.urlToken}"></span> </a></p>
+							</div>
+
+							<div class = "link_edit">
+								<input class="long_link_textBox" type="text" size="50" th:value = "${link.longLink}" readonly>
+							</div>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+
+
+		</div>
+
+
+
+
+
+
+	<!---Разметка для модального окна удаления ссылок---->
+	<div id="delete-link-modal" class="iw-modal">
+		<div class="iw-modal-wrapper">
+			<div class="iw-CSS-modal-inner">
+				<div class="iw-modal-header">
+					<h3 class="iw-modal-title">Удаление ссылки</h3>
+					<a href="#close" title="Закрыть" class="iw-close">×</a>
+				</div>
+				<div class="iw-modal-text">
+					<p>Удалить выбранные ссылки?</p>
+					<button onclick="deleteSelectedUrl()">ДА</button>
+					<button onclick="window.location.href = '#close'">НЕТ</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!---end.Разметка для модального окна---->
+
+
+	<form name="delete_links" th:method="post" th:action="@{/admin-lk/links-redaktor/delete-links}">
+		<input id  = "delete_links_input" type="hidden" name="deleted_array_links" size="50">
+		<button id = "make_post_delete_links" hidden>Тест</button>
+	</form>
+
+	<script th:inline = "javascript">
+
+		let checkBoxes = document.getElementsByClassName('linkChechBox');
+
+		function selectAllLinks(){
+			setedValue = true;
+			if (document.getElementById("selectAll").checked){
+				setedValue = true;
+			} else setedValue = false;
+
+			for (var i = 0; i < checkBoxes.length; i++) {
+				checkBoxes[i].checked = setedValue;
+			}
+		}
+
+		function deleteSelectedUrl(){
+			document.location.href = "#close";
+			var selectedLinks = [];
+			for (var i = 0; i < checkBoxes.length; i++) {
+				var iterCheckBox = checkBoxes[i];
+				if (iterCheckBox.checked){
+					selectedLinks.push(Number(iterCheckBox.getAttribute('checkBoxLinkId')));
+				}
+			}
+
+			$.ajax({
+				type: 'get',
+				url: '/admin-lk/links-redaktor/delete-links',
+				data: {deleted_array_links: selectedLinks},
+				success: function(data){
+					$("#links_div").html(data);
+				},
+
+			})
+		}
+
+		function searchLinks(){
+
+			linkFragment = document.getElementById("long_url_text_box").value;
+
+			$.ajax({
+				type: 'get',
+				url: '/admin-lk/links-redaktor/search',
+				data: {longUrlFragment: linkFragment},
+				success: function(data){
+					$("#links_div").html(data);
+				},
+
+			})
+		}
+
+
+	</script>
+
+
+</body>
+</html>

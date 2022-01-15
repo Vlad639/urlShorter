@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="" th:href = "@{/css/user-lk.css}">
+
+	</head>
+	<body>
+
+		<div class = "title_div">
+			<h1 id = "title" >Укорачиватель ссылок</h1>
+		</div>
+		
+		<div class = "page_div">
+			<div class = "page_center_div">
+
+				<div id = "login_label_div">
+					<div class = "settings_div">
+
+					</div>
+				</div>
+
+				<p style="color:red" th:text="${registrationMessage}"> </p>
+			
+				<div class = "instrument_panel_div">
+
+						<div id = "registration_div">
+							<form id="registration_from" method="post" th:action="@{/registration}">
+
+									<div id = "registration_form_div">
+									<div>
+										<label>Почта</label>
+										<input type="text" name="email" class = "registration_input_class"  size="50">
+									</div>
+
+									<div>
+										<label>Пароль</label>
+										<input type="password" name="password" class = "registration_input_class" size="50">
+									</div>
+
+									<button id = "submit_button" type="submit">Регистрация</button>
+
+									</div>
+
+								<p style="color:red" th:text="${loginFailMessage}"> </p>
+
+							</form>
+					</div>
+
+					<p><a th:href="@{/login}">Войти</a></p>
+
+		</div>
+
+
+
+	</body>
+</html>

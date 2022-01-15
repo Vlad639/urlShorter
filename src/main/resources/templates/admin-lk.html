@@ -1,0 +1,44 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" th:href = "@{/css/admin-lk.css}">
+</head>
+<body>
+
+<div class = "title_div">
+    <h1 id = "title" >Укорачиватель ссылок</h1>
+</div>
+
+<div class = "page_div">
+    <div class = "page_center_div">
+
+        <div class = "user_name_and_settings_div">
+            <div class = "user_name_div">
+                <p id = "user_name" th:text = "${userEmail}"></p>
+            </div>
+            <div class = "settings_div">
+                <p><a th:href="@{/admin-lk/settings}">Настройки</a></p>
+            </div>
+        </div>
+
+        <div class = "exit_link_div">
+            <form th:action="@{/logout}" method="post">
+                <input type="submit" value="Выйти"/>
+            </form>
+
+        </div>
+
+        <div id = "admin_lk_instruments">
+
+            <div id = "admin_links_redactor">
+                <a th:href="@{/admin-lk/links-redaktor}">Ссылки</a>
+            </div>
+
+            <div>
+                <a th:href="@{/admin-lk/users-redaktor}">Пользователи</a>
+            </div>
+
+        </div>
+
+
+</body>
+</html>

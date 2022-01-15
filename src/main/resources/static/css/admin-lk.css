@@ -1,37 +1,47 @@
+.title_div {
+    text-align: center;
+}
+
 #title {
     color: black;
     height: 80px;
     line-height: 80px
 }
 
-#search_text_box {
+#instrument_panel_div{
+    height: 81px;
+}
+
+#links_div{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 800px;
+}
+
+#users_div{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#long_url_text_box{
     width: 280px;
     height: 34px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
-#add_new_link_textbox {
-    width: 350px;
-    height: 34px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-
-}
-
-#select_all{
-    margin-left: 10px;
-}
-
-#page_numbers_textbox {
-    width: 36px;
+#email_text_box {
+    width: 280px;
     height: 34px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
-#links_numbers_selector {
-    width: 72px;
+#search_role_selector {
+    margin-top: 20px;
+    width: 150px;
     height: 34px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -39,92 +49,89 @@
     font-size: 14px;
 }
 
-#links_div{
+#user_blocked_search {
+    margin-top: 20px;
+}
+
+#users_search_button {
+    margin-top: 20px;
+}
+
+#admin_lk_instruments {
     display: flex;
     flex-direction: row;
     justify-content: center;
 }
 
-#instrument_and_links_table_id {
+#admin_links_redactor {
+    margin-right: 30px;
+}
+
+#reset_search {
+    margin-top: 20px;
+}
+
+#user_name_and_settings_admin {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.select_link{
+    margin-left: 10px;
+}
+
+.select_user{
+    margin-left: 10px;
+}
+
+.page_div {
+    text-align: center;
+    display: flex;
+    background-size: contain;
+}
+
+.page_center_div {
+    text-align: center;
+    width: 900px;
+    margin: auto;
     display: flex;
     flex-direction: column;
-}
-
-
-#change_password_form_div {
-    width: 500px;
-    text-align: right;
-}
-
-#login_form_div {
-    width: 500px;
-    text-align: right;
-}
-
-#registration_form_div {
-    width: 500px;
-    text-align: right;
-}
-
-#submit_button {
-    margin-bottom: 20px;
-    width: 156px;
-    height: 34px;
 
 }
 
-#user_email_id{
-    width: 250px;
+.user_name_and_settings_div {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
 }
 
-#add_new_link_button {
-    background-image: url("../images/add.jpg");
-    background-repeat: no-repeat;
-    width: 62px;
-    height: 56px;
+table {
+    border-collapse: collapse;
+    width: 1000px;
 }
 
-.long_link_textBox {
-    width: 370px;
-    height: 34px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+td {
+    border:1px solid black;
 }
 
-.change_password_input {
-    margin-bottom: 20px;
-    width: 150px;
-    height: 34px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.login_input_class {
-    margin-bottom: 20px;
-    width: 250px;
-    height: 34px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.registration_input_class {
-    margin-bottom: 20px;
-    width: 250px;
-    height: 34px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+.user_name_div {
+    margin-right: 15px;
 }
 
 .exit_link_div {
     text-align: right;
 }
 
-
-.links_class {
+.links_instruments {
     display: flex;
-    flex-direction: row;
-    background-color: #F1F1F1;
-    border: 1px solid black;
+    float: left;
+    align-items: center;
+}
+
+.users_instruments {
+    display: flex;
+    float: left;
     align-items: center;
 }
 
@@ -137,82 +144,35 @@
 
 }
 
-.user_name_and_settings_div {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-}
 
-.user_name_div {
-    margin-right: 15px;
-
-}
-
-
-.page_center_div {
-    text-align: center;
-    width: 900px;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-
-}
-
-.page_div {
-    text-align: center;
-    display: flex;
-    background-size: contain;
-}
-
-.title_div {
-    text-align: center;
-}
-
-.page_navigation_div {
-    float: right;
-    display: flex;
-    align-items: center;
-}
-
-
-.links_instruments {
-    display: flex;
-    float: left;
-    align-items: center;
-}
-
-.prev_link_page{
-    margin-left: 15px;
-    margin-right: 15px;
-}
-
-.next_pages_button{
-    margin-left: 15px;
-}
-
-.links_on_page_selector{
-    margin-left: 15px;
-}
 
 .url_link_text{
     min-width: 100px;
 }
 
-.copy_link_button{
-    margin-right: 15px;
-    margin-left: 15px;
+.long_link_textBox {
+    width: 550px;
+    height: 34px;
+    margin-right: 60px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
-.select_link{
-    margin-left: 15px;
+.links_class {
+    display: flex;
+    flex-direction: row;
+    background-color: #F1F1F1;
+    border: 1px solid black;
+    align-items: center;
 }
 
-.delete_link_button{
-    margin-right: 15px;
+.users_class {
+    display: flex;
+    flex-direction: row;
+    background-color: #F1F1F1;
+    border: 1px solid black;
+    align-items: center;
 }
-
-
-body {background-color: powderblue;}
 
 /********Модальное окно************/
 
@@ -295,3 +255,4 @@ body {background-color: powderblue;}
     }
 }
 /**end.Модальное окно**/
+

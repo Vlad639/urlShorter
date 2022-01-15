@@ -15,23 +15,31 @@ public class User {
     @Column(name = "user_email")
     private String email;
 
-    @Column(name = "user_blocked")
-    private boolean blocked;
+    @Column(name = "user_password")
+    private String password;
+
+    @Column(name = "user_active")
+    private boolean active;
 
     @Column(name = "user_role")
-    private int role;
+    private String role;
+
+    @Column(name = "user_blocked")
+    private boolean isBlocked;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Link> links;
 
     public User(){};
 
-    public User(long id, String email, boolean isBlocked, int role, List<Link> links) {
+    public User(long id, String email, String password, boolean active, String role, List<Link> links, boolean isBlocked) {
         this.id = id;
         this.email = email;
-        this.blocked = isBlocked;
+        this.password = password;
+        this.active = active;
         this.role = role;
         this.links = links;
+        this.isBlocked = isBlocked;
     }
 
     public long getId() {
@@ -50,19 +58,19 @@ public class User {
         this.email = userEmail;
     }
 
-    public boolean isBlocked() {
-        return blocked;
+    public boolean isActive() {
+        return active;
     }
 
-    public void setBlocked(boolean blocked) {
-        blocked = blocked;
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
-    public int getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(int role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
@@ -80,5 +88,21 @@ public class User {
 
     public void setLinks(List<Link> links) {
         this.links = links;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isBlocked() {
+        return isBlocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        isBlocked = blocked;
     }
 }

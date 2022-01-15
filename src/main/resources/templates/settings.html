@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="" th:href = "@{/css/user-lk.css}">
+
+	</head>
+	<body>
+
+		<div class = "title_div">
+			<h1 id = "title" >Укорачиватель ссылок</h1>
+		</div>
+		
+		<div class = "page_div">
+			<div class = "page_center_div">
+
+				<div class = "user_name_and_settings_div">
+					<div class = "user_name_div">
+						<p id = "user_name" th:text = "${userEmail}"></p>
+					</div>
+					<div class = "settings_div">
+						<p><a href="/user-lk">Личный кабинет</a></p>
+					</div>
+				</div>
+				
+				<div class = "exit_link_div">
+					<form th:action="@{/logout}" method="post">
+						<input type="submit" value="Выйти"/>
+					</form>
+				</div>
+				
+			
+				<div class = "instrument_panel_div">
+
+						<div id = "change_password_div">
+							<form id="change_password_from" method="post" th:action="@{/user-lk/change-pass}">
+
+									<div id = "change_password_form_div">
+									<div>
+										<label>Старый пароль</label>
+										<input name = "old_pass" id  = "old_pass" class = "change_password_input" type="text" size="50">
+									</div>
+
+									<div>
+										<label>Новый пароль</label>
+										<input name = "new_pass" id = "new_pass" class = "change_password_input" type="text" size="50">
+									</div>
+
+									<div>
+										<label>Новый пароль ещё раз</label>
+										<input name = "new_pass_2" id  = "new_pass_2" class = "change_password_input" type="text" size="50">
+									</div>
+
+									<button id = "submit_button" type="submit">Подтвердить</button>
+
+									</div>
+
+								<p th:style="${messageColorProp}" th:text="${changePasswordMessage}"> </p>
+
+							</form>
+					</div>
+
+		</div>
+
+
+
+	</body>
+</html>
