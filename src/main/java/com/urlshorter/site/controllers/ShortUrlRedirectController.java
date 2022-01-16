@@ -24,14 +24,12 @@ public class ShortUrlRedirectController {
             Link link = linkRepository.getById(urlId);
             User user = link.getUser();
 
-            if (user.isBlocked()){
+            if (user.isBlocked())
                 return "/link-not-found";
-            }
 
             String longUrl = linkRepository.getById(urlId).getLongLink();
 
             return "redirect:" + longUrl;
-
         }
         catch (Exception e){
             return "/link-not-found";

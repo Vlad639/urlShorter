@@ -1,8 +1,7 @@
 package com.urlshorter.site.controllers;
 
-import com.urlshorter.site.other.CheckPassword;
+import com.urlshorter.site.other.CheckerPassword;
 import com.urlshorter.site.other.CheckPasswordResult;
-import com.urlshorter.site.other.EmailSenderService;
 import com.urlshorter.site.other.UrlCoderAndDecoder;
 import com.urlshorter.site.models.Link;
 import com.urlshorter.site.models.User;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -117,6 +115,9 @@ public class UsersController {
         model.addAttribute("userEmail", user.getEmail());
         model.addAttribute("userIsBlocked", user.isBlocked());
 
+        if (user.isBlocked())
+            model.addAttribute("blockMessage", "Вы заблокированы!");
+
         return "user-lk";
     }
 
@@ -188,45 +189,6 @@ public class UsersController {
     @RequestMapping("/settings")
     String settingsPage(Model model){
         model.addAttribute("userEmail", user.getEmail());
-
-        return "settings";
-    }
-
-    @RequestMapping("/change-pass")
-    String changePassword(Model model,
-                          @RequestParam("old_pass") String oldPass,
-                          @RequestParam("new_pass") String newPass,
-                          @RequestParam("new_pass_2") String newPassRepeat)
-    {
-        String changePassMessage;
-        String currentPass = user.getPassword();
-
-        if (!oldPass.equals(currentPass)){
-            changePassMessage = "Старый пароль введён неверно!";
-        }
-        else
-        if (!newPass.equals(newPassRepeat)){
-            changePassMessage = "Новые пароли не совпадают!";
-        }
-        else {
-
-            CheckPasswordResult checkPasswordResult = CheckPassword.checkPassword(newPass);
-            changePassMessage = checkPasswordResult.message;
-
-            if (checkPasswordResult.passwordIsOk){
-                user.setPassword(newPass);
-                usersRepository.save(user);
-                changePassMessage = "Пароль успешно изменён!";
-
-                model.addAttribute("messageColorProp", "color: green");
-                model.addAttribute("changePasswordMessage", changePassMessage);
-
-                return "settings";
-            }
-        }
-
-        model.addAttribute("messageColorProp", "color: red");
-        model.addAttribute("changePasswordMessage", changePassMessage);
 
         return "settings";
     }

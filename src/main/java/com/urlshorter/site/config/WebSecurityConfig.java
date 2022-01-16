@@ -7,7 +7,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.sql.DataSource;
 
@@ -26,7 +25,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                     .antMatchers("/admin-lk/**").hasAuthority("admin")
-                    .antMatchers("/", "/images/**","/registration", "/css/user-lk.css", "/short/**").permitAll()
+                    .antMatchers("/","/jQuery.js","/confirm-account", "/images/**","/registration","/reg-new-user", "/css/user-lk.css", "/short/**").permitAll()
+                    .antMatchers("/login", "/login-fail", "/reset-password", "/get-new-pass").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()
@@ -34,6 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .usernameParameter("email")
                     .loginProcessingUrl("/perform-login")
                     .successHandler(authenticationSuccessHandler)
+                    .failureHandler(new CustomAuthenticationFailureHandler())
                     .permitAll()
                 .and()
                     .logout()

@@ -27,12 +27,15 @@ public class User {
     @Column(name = "user_blocked")
     private boolean isBlocked;
 
+    @Column(name = "user_token")
+    private String token;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Link> links;
 
     public User(){};
 
-    public User(long id, String email, String password, boolean active, String role, List<Link> links, boolean isBlocked) {
+    public User(long id, String email, String password, boolean active, String role, List<Link> links, boolean isBlocked, String token) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -40,6 +43,7 @@ public class User {
         this.role = role;
         this.links = links;
         this.isBlocked = isBlocked;
+        this.token = token;
     }
 
     public long getId() {
@@ -104,5 +108,13 @@ public class User {
 
     public void setBlocked(boolean blocked) {
         isBlocked = blocked;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

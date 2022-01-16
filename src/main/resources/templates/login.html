@@ -2,7 +2,11 @@
 <html lang="ru">
 	<head>
 		<link rel="stylesheet" type="text/css" th:href = "@{/css/user-lk.css}">
-		<title></title>
+		<style>
+			#submit_button {
+				margin-right: 10px;
+			}
+		</style>
 	</head>
 	<body>
 
@@ -37,16 +41,26 @@
 										<input type="password" name="password" class = "login_input_class" size="50">
 									</div>
 
-									<button id = "submit_button" type="submit">Войти</button>
+										<div id = "loggin_and_registration_div">
+											<div>
+												<button id = "submit_button" type="submit">Войти</button>
+											</div>
+
+											<div>
+												<p><a th:href="@{/registration}">Регистрация</a></p>
+											</div>
+										</div>
+
+									<p><a th:href="@{/reset-password}">Восстановить пароль</a></p>
 
 									</div>
-
-								<p style="color:red" th:text="${loginFailMessage}"> </p>
 
 							</form>
 					</div>
 
-					<p><a th:href="@{/registration}">Регистрация</a></p>
+					<p style="color: red" th:text = "${failLoginMessage}"> </p>
+
+
 
 		</div>
 

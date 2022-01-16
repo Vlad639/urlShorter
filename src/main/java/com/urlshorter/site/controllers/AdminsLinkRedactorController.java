@@ -1,15 +1,9 @@
 package com.urlshorter.site.controllers;
 
 import com.urlshorter.site.models.Link;
-import com.urlshorter.site.models.User;
-import com.urlshorter.site.other.CheckPassword;
-import com.urlshorter.site.other.CheckPasswordResult;
 import com.urlshorter.site.repositories.LinkRepository;
-import com.urlshorter.site.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;

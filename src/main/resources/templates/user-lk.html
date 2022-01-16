@@ -23,6 +23,8 @@
 				<form th:method="post" th:action="@{/user-lk}">
 					<button id = "reset_search">Сбросить поиск</button>
 				</form>
+
+				<p style = "color: red" th:text = "${blockMessage}"> </p>
 			
 			
 				<div class = "user_name_and_settings_div">

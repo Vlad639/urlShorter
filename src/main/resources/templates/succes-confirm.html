@@ -1,0 +1,47 @@
+<html>
+<head>
+    <style>
+        .title_div {
+            text-align: center;
+        }
+
+        #title {
+            color: black;
+            height: 80px;
+            line-height: 80px
+        }
+
+        #loggin_and_registration_div {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+
+        #login_link {
+            margin-right: 30px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class = "title_div">
+    <h1 id = "title" >Укорачиватель ссылок</h1>
+</div>
+
+<div class = "page_div">
+    <div class = "page_center_div">
+
+        <p> Почта успешно подтверждена! </p>
+
+
+            <div id = "loggin_and_registration_div">
+                <div id = "login_link">
+                    <a th:href="@{/login}">Войти</a>
+                </div>
+            </div>
+
+    </div>
+</div>
+</body>
+</html>

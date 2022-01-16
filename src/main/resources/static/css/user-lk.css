@@ -80,8 +80,14 @@
 #add_new_link_button {
     background-image: url("../images/add.jpg");
     background-repeat: no-repeat;
-    width: 62px;
-    height: 56px;
+    width: 47px;
+    height: 47px;
+}
+
+#loggin_and_registration_div {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
 }
 
 .long_link_textBox {

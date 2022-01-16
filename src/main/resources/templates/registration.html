@@ -2,6 +2,13 @@
 <html>
 	<head>
 		<link rel="stylesheet" type="text/css" href="" th:href = "@{/css/user-lk.css}">
+		<script type="text/javascript" th:src="@{/jQuery.js}"></script>
+
+		<style>
+			#submit_button {
+				margin-right: 55px;
+			}
+		</style>
 
 	</head>
 	<body>
@@ -13,42 +20,81 @@
 		<div class = "page_div">
 			<div class = "page_center_div">
 
-				<div id = "login_label_div">
-					<div class = "settings_div">
-
-					</div>
-				</div>
-
-				<p style="color:red" th:text="${registrationMessage}"> </p>
-			
 				<div class = "instrument_panel_div">
 
 						<div id = "registration_div">
-							<form id="registration_from" method="post" th:action="@{/registration}">
 
 									<div id = "registration_form_div">
 									<div>
 										<label>Почта</label>
-										<input type="text" name="email" class = "registration_input_class"  size="50">
+										<input type="text" id = "email" class = "registration_input_class"  size="50">
 									</div>
 
 									<div>
 										<label>Пароль</label>
-										<input type="password" name="password" class = "registration_input_class" size="50">
+										<input type="password" id = "password" class = "registration_input_class" size="50">
 									</div>
 
-									<button id = "submit_button" type="submit">Регистрация</button>
+										<div id = "loggin_and_registration_div">
+											<div>
+												<button id = "submit_button" onClick="newUserRegistation()">Регистрация</button>
+											</div>
+
+											<div>
+												<p><a th:href="@{/login}">Войти</a></p>
+											</div>
+										</div>
 
 									</div>
 
-								<p style="color:red" th:text="${loginFailMessage}"> </p>
+							<div style="text-align: left">
+								<p>Пароль должен:</p>
+								<ul>
+									<li>Быть длиной от 7 до 15 символов</li>
+									<li>Состоять из строчных и заглавных букв латинского алфавита</li>
+									<li>Иметь хотя бы одну цифру</li>
+									<li>Иметь хотя бы один из символов ! % * ( ) ? @ # $ ~ | [ ] { }</li>
+								</ul>
+							</div>
 
-							</form>
-					</div>
+								<div id = "reg_message_div" th:fragment = "reg_message_fragm">
+									<p th:text="${regMessage}" > </p>
+								</div>
 
-					<p><a th:href="@{/login}">Войти</a></p>
+							<p><a th:href="@{/reset-password}">Восстановить пароль</a></p>
 
+
+						</div>
+
+
+
+				</div>
+
+			</div>
 		</div>
+
+		<script th:inline = "javascript">
+
+			function newUserRegistation() {
+
+				email = document.getElementById("email").value;
+				password = document.getElementById("password").value;
+
+				$.ajax({
+					type: 'get',
+					url: '/reg-new-user',
+					data: {email: email,
+						   password: password},
+					success: function(data){
+						$("#reg_message_div").html(data);
+					},
+
+				})
+
+
+			}
+
+		</script>
 
 
 

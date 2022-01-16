@@ -9,6 +9,8 @@ import java.util.List;
 public interface UsersRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
 
+    User findByToken(String token);
+
     @Query(value = "SELECT * FROM users WHERE user_email LIKE ?1 AND user_blocked = ?2 ORDER BY user_id", nativeQuery = true)
     List<User> findByEmailLikeAndBlocked(String emailFragment, boolean blocked);
 

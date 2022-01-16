@@ -1,10 +1,10 @@
 package com.urlshorter.site.other;
 
-public class CheckPassword {
+public class CheckerPassword {
 
-    private static final int minPasswordLength = 7;
-    private static final int maxPasswordLength = 15;
-    private static final String specialSymbols = "%*)?@#$~";
+    private static final int minPasswordLength = PasswordSettings.minPasswordLength;
+    private static final int maxPasswordLength = PasswordSettings.maxPasswordLength;
+    private static final String specialSymbols = PasswordSettings.specialSymbols;
 
     public static CheckPasswordResult checkPassword(String password){
         int passwordLength = password.length();
