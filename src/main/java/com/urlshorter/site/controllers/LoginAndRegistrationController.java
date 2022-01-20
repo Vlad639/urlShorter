@@ -1,5 +1,6 @@
 package com.urlshorter.site.controllers;
 
+import com.urlshorter.site.config.PassEncoder;
 import com.urlshorter.site.models.User;
 import com.urlshorter.site.other.*;
 import com.urlshorter.site.repositories.UsersRepository;
@@ -19,6 +20,9 @@ public class LoginAndRegistrationController {
 
     @Autowired
     private EmailSenderService emailSenderService;
+
+    @Autowired
+    PassEncoder passwordEncoder;
 
     CheckPasswordResult checkPassword(String password){
 
@@ -107,7 +111,7 @@ public class LoginAndRegistrationController {
         if (checkPassword(password).passwordIsOk){
             User newUser = new User();
             newUser.setEmail(email);
-            newUser.setPassword(password);
+            newUser.setPassword(passwordEncoder.passwordEncoder().encode(password));
             newUser.setActive(false);
             newUser.setRole("user");
             newUser.setBlocked(false);
