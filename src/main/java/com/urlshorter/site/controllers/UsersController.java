@@ -1,15 +1,11 @@
 package com.urlshorter.site.controllers;
 
-import com.urlshorter.site.other.CheckerPassword;
-import com.urlshorter.site.other.CheckPasswordResult;
 import com.urlshorter.site.other.UrlCoderAndDecoder;
 import com.urlshorter.site.models.Link;
 import com.urlshorter.site.models.User;
 import com.urlshorter.site.repositories.LinkRepository;
 import com.urlshorter.site.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +19,7 @@ import java.util.List;
 @RequestMapping("/user-lk")
 public class UsersController {
 
-    private User user;
+    private static User user;
     private int currentPage = 1;
     private int linksOnPage = 10;
     private int userLinksSize = 0;
@@ -35,10 +31,15 @@ public class UsersController {
     @Autowired
     LinkRepository linkRepository;
 
-    ModelAndView getInstrumentAndLinks(Authentication authentication){
+    public static void SetUser(User newUser){
+        user = newUser;
+    }
+
+    ModelAndView getInstrumentAndLinks(){
         ModelAndView modelAndView = new ModelAndView("user-lk::instrument_and_links_table");
 
-        user = usersRepository.findByEmail(authentication.getName());
+        user = usersRepository.findByEmail(user.getEmail());
+
         List<Link> userAllLinks = user.getLinks();
         List<Link> modelLinks = new ArrayList<>();
 
@@ -83,12 +84,12 @@ public class UsersController {
     }
 
     @RequestMapping("/search")
-    ModelAndView searchLink(@RequestParam("linkFragment") String linkFragment, Authentication auth){
+    ModelAndView searchLink(@RequestParam("linkFragment") String linkFragment){
 
         ModelAndView modelAndView = new ModelAndView("user-lk::instrument_and_links_table");
 
         if (linkFragment.isEmpty()){
-            return getInstrumentAndLinks(auth);
+            return getInstrumentAndLinks();
         }
 
         List<Link> userAllLinks = user.getLinks();
@@ -110,9 +111,8 @@ public class UsersController {
     }
 
     @RequestMapping("")
-    String UserAccount(Model model, Authentication authentication){
+    String UserAccount(Model model){
 
-        user = usersRepository.findByEmail(authentication.getName());
         model.addAttribute("userEmail", user.getEmail());
         model.addAttribute("userIsBlocked", user.isBlocked());
 
@@ -123,7 +123,7 @@ public class UsersController {
     }
 
     @RequestMapping("/add-new-link")
-    ModelAndView addNewLink(@RequestParam("longLink") String longLink, Authentication auth){
+    ModelAndView addNewLink(@RequestParam("longLink") String longLink){
 
         if (!user.isBlocked()) {
 
@@ -136,14 +136,13 @@ public class UsersController {
             linkRepository.save(link);
         }
 
-        return getInstrumentAndLinks(auth);
+        return getInstrumentAndLinks();
     }
 
     @RequestMapping("/update-link")
     ModelAndView updateLongLink(
             @RequestParam("link_id") Long linkId,
-            @RequestParam("new_long_link") String newLongLink,
-            Authentication auth
+            @RequestParam("new_long_link") String newLongLink
     ){
 
 
@@ -153,38 +152,38 @@ public class UsersController {
             linkRepository.save(link);
         }
 
-        return getInstrumentAndLinks(auth);
+        return getInstrumentAndLinks();
     }
 
     @RequestMapping("/delete-links")
-    ModelAndView deleteLinks(@RequestParam("deleted_array_links[]") List<Long> deletedLinksIds, Authentication auth){
+    ModelAndView deleteLinks(@RequestParam("deleted_array_links[]") List<Long> deletedLinksIds){
         linkRepository.deleteAllById(deletedLinksIds);
 
-        return getInstrumentAndLinks(auth);
+        return getInstrumentAndLinks();
     }
 
     @RequestMapping("/prev-links-page")
-    ModelAndView prevLinksPage(Authentication auth){
+    ModelAndView prevLinksPage(){
         if (currentPage >= 2)
             currentPage -= 1;
 
-        return getInstrumentAndLinks(auth);
+        return getInstrumentAndLinks();
     }
 
     @RequestMapping("/next-links-page" )
-    ModelAndView nextLinksPage(Authentication auth){
+    ModelAndView nextLinksPage(){
         if (currentPage * linksOnPage < userLinksSize)
             currentPage += 1;
 
-        return getInstrumentAndLinks(auth);
+        return getInstrumentAndLinks();
     }
 
     @RequestMapping("/change-links-page")
-    ModelAndView changeLinksPageNumbers(@RequestParam("links_on_page") Integer linksOnPage, Authentication auth){
+    ModelAndView changeLinksPageNumbers(@RequestParam("links_on_page") Integer linksOnPage){
         this.linksOnPage = linksOnPage;
         currentPage = 1;
 
-        return getInstrumentAndLinks(auth);
+        return getInstrumentAndLinks();
     }
 
     @RequestMapping("/settings")

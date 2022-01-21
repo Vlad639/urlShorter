@@ -47,7 +47,7 @@ public class LoginAndRegistrationController {
             simpleMailMessage.setFrom("SmalDyadyaVadya123@yandex.ru");
             simpleMailMessage.setText("Ваш новый пароль: " + newPassword);
 
-            user.setPassword(newPassword);
+            user.setPassword(passwordEncoder.passwordEncoder().encode(newPassword));
             usersRepository.save(user);
 
             emailSenderService.sendEmail(simpleMailMessage);

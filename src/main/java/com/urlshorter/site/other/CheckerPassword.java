@@ -7,6 +7,7 @@ public class CheckerPassword {
     private static final String specialSymbols = PasswordSettings.specialSymbols;
 
     public static CheckPasswordResult checkPassword(String password){
+
         int passwordLength = password.length();
         char[] charPassword = password.toCharArray();
         char[] charSpecialSymb = specialSymbols.toCharArray();

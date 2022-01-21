@@ -26,10 +26,11 @@ public class AuthSuccessHandler implements org.springframework.security.web.auth
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (GrantedAuthority grantedAuthority : authorities) {
-            if (grantedAuthority.getAuthority().equals("user")) {
+
+            if (grantedAuthority.getAuthority().equals("ROLE_user")) {
                 AuthIsUser = true;
                 break;
-            } else if (grantedAuthority.getAuthority().equals("admin")) {
+            } else if (grantedAuthority.getAuthority().equals("ROLE_admin")) {
                 AuthIsAdmin = true;
                 break;
             }
