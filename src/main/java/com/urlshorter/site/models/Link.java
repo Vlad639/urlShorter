@@ -79,4 +79,5 @@ public class Link {
     public void setUser(User user) {
         this.user = user;
     }
+
 }

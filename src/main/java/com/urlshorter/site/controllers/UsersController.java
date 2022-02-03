@@ -1,5 +1,6 @@
 package com.urlshorter.site.controllers;
 
+import com.urlshorter.site.workwithkafka.*;
 import com.urlshorter.site.other.UrlCoderAndDecoder;
 import com.urlshorter.site.models.Link;
 import com.urlshorter.site.models.User;
@@ -30,6 +31,10 @@ public class UsersController {
 
     @Autowired
     LinkRepository linkRepository;
+
+    @Autowired
+    ProducerService producerService;
+
 
     public static void SetUser(User newUser){
         user = newUser;
@@ -134,6 +139,8 @@ public class UsersController {
             link.setUrlToken(UrlCoderAndDecoder.hashids.encode(linkId));
 
             linkRepository.save(link);
+
+            producerService.produce(new KafkaMessage(user.getEmail(), ActionEnum.CREATE, link));
         }
 
         return getInstrumentAndLinks();
@@ -145,11 +152,22 @@ public class UsersController {
             @RequestParam("new_long_link") String newLongLink
     ){
 
-
         if (!user.isBlocked()) {
             Link link = linkRepository.getById(linkId);
+            Link oldLink = new Link(user, link.getUrlToken(), link.getLongLink());
+
             link.setLongLink(newLongLink);
             linkRepository.save(link);
+
+            producerService.produce(
+                    new KafkaMessage(
+                            user.getEmail(),
+                            ActionEnum.UPDATE_LINK,
+                            oldLink,
+                            newLongLink
+                    )
+            );
+
         }
 
         return getInstrumentAndLinks();
@@ -157,7 +175,16 @@ public class UsersController {
 
     @RequestMapping("/delete-links")
     ModelAndView deleteLinks(@RequestParam("deleted_array_links[]") List<Long> deletedLinksIds){
+        List<Link> deletedLinks = linkRepository.findAllById(deletedLinksIds);
         linkRepository.deleteAllById(deletedLinksIds);
+
+        for (Link link: deletedLinks) {
+            producerService.produce(new KafkaMessage(
+                    user.getEmail(),
+                    ActionEnum.DELETE,
+                    link
+            ));
+        }
 
         return getInstrumentAndLinks();
     }

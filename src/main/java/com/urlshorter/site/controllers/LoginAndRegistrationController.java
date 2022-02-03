@@ -4,6 +4,10 @@ import com.urlshorter.site.config.PassEncoder;
 import com.urlshorter.site.models.User;
 import com.urlshorter.site.other.*;
 import com.urlshorter.site.repositories.UsersRepository;
+import com.urlshorter.site.workwithkafka.ActionEnum;
+import com.urlshorter.site.workwithkafka.KafkaMessage;
+import com.urlshorter.site.workwithkafka.ProducerService;
+import org.apache.kafka.clients.producer.Producer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Controller;
@@ -23,6 +27,9 @@ public class LoginAndRegistrationController {
 
     @Autowired
     PassEncoder passwordEncoder;
+
+    @Autowired
+    ProducerService producerService;
 
     CheckPasswordResult checkPassword(String password){
 
@@ -52,6 +59,15 @@ public class LoginAndRegistrationController {
 
             emailSenderService.sendEmail(simpleMailMessage);
             model.addAttribute("resetPasswordMessage", "Новый пароль отправлен на почту.");
+
+            producerService.produce(
+                    new KafkaMessage(
+                            user.getEmail(),
+                            ActionEnum.PASSWORD_RECOVERY,
+                            "Email has been sent"
+                    )
+            );
+
         }
 
         return "reset-password";
@@ -89,6 +105,12 @@ public class LoginAndRegistrationController {
         User confirmUser = usersRepository.findByToken(token);
         confirmUser.setActive(true);
         usersRepository.save(confirmUser);
+
+        producerService.produce(new KafkaMessage(
+                usersRepository.findByToken(token).getEmail(),
+                ActionEnum.CONFIRM_EMAIL,
+                "Email was confirmed"
+        ));
 
         return "succes-confirm";
     }
@@ -129,6 +151,12 @@ public class LoginAndRegistrationController {
             +"http://localhost:8080/confirm-account?token="+confirmToken);
 
             emailSenderService.sendEmail(simpleMailMessage);
+
+            producerService.produce(new KafkaMessage(
+                    email,
+                    ActionEnum.REGISTRATION,
+                    "Email has been sent"
+            ));
 
         }
         else {

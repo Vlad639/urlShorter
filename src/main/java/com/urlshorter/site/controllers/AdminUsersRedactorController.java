@@ -3,7 +3,11 @@ package com.urlshorter.site.controllers;
 import com.urlshorter.site.models.User;
 import com.urlshorter.site.other.SearchUsersParameters;
 import com.urlshorter.site.repositories.UsersRepository;
+import com.urlshorter.site.workwithkafka.ActionEnum;
+import com.urlshorter.site.workwithkafka.KafkaMessage;
+import com.urlshorter.site.workwithkafka.ProducerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +22,9 @@ public class AdminUsersRedactorController {
     @Autowired
     UsersRepository usersRepository;
 
+    @Autowired
+    ProducerService producerService;
+
     SearchUsersParameters searchUsersParameters;
 
     @RequestMapping("")
@@ -29,12 +36,27 @@ public class AdminUsersRedactorController {
     @RequestMapping("/set-user-blocked")
     ModelAndView setUserActive(
             @RequestParam("user_id") Long userId,
-            @RequestParam("user_blocked") boolean userBlocked
+            @RequestParam("user_blocked") boolean userBlocked,
+            Authentication auth
     ){
 
         User user = usersRepository.getById(userId);
         user.setBlocked(userBlocked);
         usersRepository.save(user);
+
+        ActionEnum action;
+        if (userBlocked) {
+            action = ActionEnum.BLOCK;
+        }
+        else {
+            action = ActionEnum.UNBLOCK;
+        }
+
+        producerService.produce(new KafkaMessage(
+                auth.getName(),
+                action,
+                user
+        ));
 
         return searchUsers(searchUsersParameters.emailFragment,
                 searchUsersParameters.role,
@@ -65,11 +87,18 @@ public class AdminUsersRedactorController {
     @RequestMapping("/set-user-role")
     ModelAndView setUserRole(
             @RequestParam("user_id") Long userId,
-            @RequestParam("user_role") String userRole
+            @RequestParam("user_role") String userRole,
+            Authentication auth
     ){
         User user = usersRepository.getById(userId);
         user.setRole(userRole);
         usersRepository.save(user);
+
+        producerService.produce(new KafkaMessage(
+                auth.getName(),
+                ActionEnum.CHANGE_ROLE,
+                user
+        ));
 
        return searchUsers(searchUsersParameters.emailFragment,
                           searchUsersParameters.role,

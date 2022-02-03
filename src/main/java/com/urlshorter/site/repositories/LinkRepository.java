@@ -11,4 +11,6 @@ public interface LinkRepository extends JpaRepository<Link, Long> {
 
     List<Link> findLinksByLongLinkLike(String longLinkFragment);
 
+    List<Link> findAllById(Iterable<Long> longs);
+
 }
