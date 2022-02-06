@@ -1,13 +1,12 @@
 package com.urlshorter.site.controllers;
 
+import com.urlshorter.site.audit.AuditProducer;
 import com.urlshorter.site.config.PassEncoder;
 import com.urlshorter.site.models.User;
 import com.urlshorter.site.other.*;
 import com.urlshorter.site.repositories.UsersRepository;
-import com.urlshorter.site.workwithkafka.ActionEnum;
-import com.urlshorter.site.workwithkafka.KafkaMessage;
-import com.urlshorter.site.workwithkafka.ProducerService;
-import org.apache.kafka.clients.producer.Producer;
+import com.urlshorter.site.audit.ActionEnum;
+import com.urlshorter.site.audit.AuditMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Controller;
@@ -29,7 +28,7 @@ public class LoginAndRegistrationController {
     PassEncoder passwordEncoder;
 
     @Autowired
-    ProducerService producerService;
+    AuditProducer auditProducer;
 
     CheckPasswordResult checkPassword(String password){
 
@@ -60,8 +59,8 @@ public class LoginAndRegistrationController {
             emailSenderService.sendEmail(simpleMailMessage);
             model.addAttribute("resetPasswordMessage", "Новый пароль отправлен на почту.");
 
-            producerService.produce(
-                    new KafkaMessage(
+            auditProducer.produce(
+                    new AuditMessage(
                             user.getEmail(),
                             ActionEnum.PASSWORD_RECOVERY,
                             "Email has been sent"
@@ -106,7 +105,7 @@ public class LoginAndRegistrationController {
         confirmUser.setActive(true);
         usersRepository.save(confirmUser);
 
-        producerService.produce(new KafkaMessage(
+        auditProducer.produce(new AuditMessage(
                 usersRepository.findByToken(token).getEmail(),
                 ActionEnum.CONFIRM_EMAIL,
                 "Email was confirmed"
@@ -152,7 +151,7 @@ public class LoginAndRegistrationController {
 
             emailSenderService.sendEmail(simpleMailMessage);
 
-            producerService.produce(new KafkaMessage(
+            auditProducer.produce(new AuditMessage(
                     email,
                     ActionEnum.REGISTRATION,
                     "Email has been sent"

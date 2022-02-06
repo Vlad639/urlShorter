@@ -1,6 +1,8 @@
 package com.urlshorter.site.controllers;
 
-import com.urlshorter.site.workwithkafka.*;
+import com.urlshorter.site.audit.AuditProducer;
+import com.urlshorter.site.audit.ActionEnum;
+import com.urlshorter.site.audit.AuditMessage;
 import com.urlshorter.site.other.UrlCoderAndDecoder;
 import com.urlshorter.site.models.Link;
 import com.urlshorter.site.models.User;
@@ -33,7 +35,7 @@ public class UsersController {
     LinkRepository linkRepository;
 
     @Autowired
-    ProducerService producerService;
+    AuditProducer auditProducer;
 
 
     public static void SetUser(User newUser){
@@ -140,7 +142,8 @@ public class UsersController {
 
             linkRepository.save(link);
 
-            producerService.produce(new KafkaMessage(user.getEmail(), ActionEnum.CREATE, link));
+            auditProducer.produce(new AuditMessage(user.getEmail(), ActionEnum.CREATE, link));
+
         }
 
         return getInstrumentAndLinks();
@@ -159,8 +162,8 @@ public class UsersController {
             link.setLongLink(newLongLink);
             linkRepository.save(link);
 
-            producerService.produce(
-                    new KafkaMessage(
+            auditProducer.produce(
+                    new AuditMessage(
                             user.getEmail(),
                             ActionEnum.UPDATE_LINK,
                             oldLink,
@@ -179,7 +182,7 @@ public class UsersController {
         linkRepository.deleteAllById(deletedLinksIds);
 
         for (Link link: deletedLinks) {
-            producerService.produce(new KafkaMessage(
+            auditProducer.produce(new AuditMessage(
                     user.getEmail(),
                     ActionEnum.DELETE,
                     link

@@ -1,4 +1,4 @@
-package com.urlshorter.site.workwithkafka;
+package com.urlshorter.site.audit;
 
 public enum ActionEnum {
     CHANGE_PASSWORD,

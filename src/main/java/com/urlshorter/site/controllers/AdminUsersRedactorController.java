@@ -1,11 +1,11 @@
 package com.urlshorter.site.controllers;
 
+import com.urlshorter.site.audit.AuditProducer;
 import com.urlshorter.site.models.User;
 import com.urlshorter.site.other.SearchUsersParameters;
 import com.urlshorter.site.repositories.UsersRepository;
-import com.urlshorter.site.workwithkafka.ActionEnum;
-import com.urlshorter.site.workwithkafka.KafkaMessage;
-import com.urlshorter.site.workwithkafka.ProducerService;
+import com.urlshorter.site.audit.ActionEnum;
+import com.urlshorter.site.audit.AuditMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -23,7 +23,7 @@ public class AdminUsersRedactorController {
     UsersRepository usersRepository;
 
     @Autowired
-    ProducerService producerService;
+    AuditProducer auditProducer;
 
     SearchUsersParameters searchUsersParameters;
 
@@ -52,7 +52,7 @@ public class AdminUsersRedactorController {
             action = ActionEnum.UNBLOCK;
         }
 
-        producerService.produce(new KafkaMessage(
+        auditProducer.produce(new AuditMessage(
                 auth.getName(),
                 action,
                 user
@@ -94,7 +94,7 @@ public class AdminUsersRedactorController {
         user.setRole(userRole);
         usersRepository.save(user);
 
-        producerService.produce(new KafkaMessage(
+        auditProducer.produce(new AuditMessage(
                 auth.getName(),
                 ActionEnum.CHANGE_ROLE,
                 user

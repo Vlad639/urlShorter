@@ -1,12 +1,12 @@
 package com.urlshorter.site.controllers;
 
+import com.urlshorter.site.audit.AuditProducer;
 import com.urlshorter.site.models.User;
 import com.urlshorter.site.other.CheckPasswordResult;
 import com.urlshorter.site.other.CheckerPassword;
 import com.urlshorter.site.repositories.UsersRepository;
-import com.urlshorter.site.workwithkafka.ActionEnum;
-import com.urlshorter.site.workwithkafka.KafkaMessage;
-import com.urlshorter.site.workwithkafka.ProducerService;
+import com.urlshorter.site.audit.ActionEnum;
+import com.urlshorter.site.audit.AuditMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,7 @@ public class SettingsController {
     UsersRepository usersRepository;
 
     @Autowired
-    ProducerService producerService;
+    AuditProducer auditProducer;
 
     @RequestMapping("/to-lk")
     String toAccount(Authentication auth){
@@ -70,8 +70,8 @@ public class SettingsController {
                 model.addAttribute("messageColorProp", "color: green");
                 model.addAttribute("changePasswordMessage", changePassMessage);
 
-                producerService.produce(
-                        new KafkaMessage(
+                auditProducer.produce(
+                        new AuditMessage(
                                 user.getEmail(),
                                 ActionEnum.CHANGE_PASSWORD,
                                 "OK")
