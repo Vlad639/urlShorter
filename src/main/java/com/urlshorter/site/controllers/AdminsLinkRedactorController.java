@@ -1,6 +1,6 @@
 package com.urlshorter.site.controllers;
 
-import com.urlshorter.site.audit.AuditProducer;
+import com.urlshorter.site.audit.Producer;
 import com.urlshorter.site.models.Link;
 import com.urlshorter.site.repositories.LinkRepository;
 import com.urlshorter.site.audit.ActionEnum;
@@ -23,8 +23,7 @@ public class AdminsLinkRedactorController {
     @Autowired
     LinkRepository linkRepository;
 
-    @Autowired
-    AuditProducer auditProducer;
+    Producer auditProducer = new Producer();
 
     @RequestMapping("/search")
     ModelAndView searchLinks(@RequestParam("longUrlFragment") String linkFragment){

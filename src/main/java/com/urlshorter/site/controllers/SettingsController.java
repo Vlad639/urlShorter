@@ -1,6 +1,6 @@
 package com.urlshorter.site.controllers;
 
-import com.urlshorter.site.audit.AuditProducer;
+import com.urlshorter.site.audit.Producer;
 import com.urlshorter.site.models.User;
 import com.urlshorter.site.other.CheckPasswordResult;
 import com.urlshorter.site.other.CheckerPassword;
@@ -20,8 +20,7 @@ public class SettingsController {
     @Autowired
     UsersRepository usersRepository;
 
-    @Autowired
-    AuditProducer auditProducer;
+    Producer auditProducer = new Producer();
 
     @RequestMapping("/to-lk")
     String toAccount(Authentication auth){

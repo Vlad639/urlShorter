@@ -1,4 +1,4 @@
-package com.urlshorter.site.audit.workwithactivemq;
+package com.urlshorter.site.audit;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.context.annotation.Bean;

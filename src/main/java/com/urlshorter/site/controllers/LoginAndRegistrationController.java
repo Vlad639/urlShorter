@@ -1,6 +1,6 @@
 package com.urlshorter.site.controllers;
 
-import com.urlshorter.site.audit.AuditProducer;
+import com.urlshorter.site.audit.Producer;
 import com.urlshorter.site.config.PassEncoder;
 import com.urlshorter.site.models.User;
 import com.urlshorter.site.other.*;
@@ -27,8 +27,8 @@ public class LoginAndRegistrationController {
     @Autowired
     PassEncoder passwordEncoder;
 
-    @Autowired
-    AuditProducer auditProducer;
+
+    Producer auditProducer = new Producer();
 
     CheckPasswordResult checkPassword(String password){
 

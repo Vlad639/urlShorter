@@ -1,6 +1,6 @@
 package com.urlshorter.site.controllers;
 
-import com.urlshorter.site.audit.AuditProducer;
+import com.urlshorter.site.audit.Producer;
 import com.urlshorter.site.models.User;
 import com.urlshorter.site.other.SearchUsersParameters;
 import com.urlshorter.site.repositories.UsersRepository;
@@ -22,8 +22,7 @@ public class AdminUsersRedactorController {
     @Autowired
     UsersRepository usersRepository;
 
-    @Autowired
-    AuditProducer auditProducer;
+    Producer auditProducer = new Producer();
 
     SearchUsersParameters searchUsersParameters;
 

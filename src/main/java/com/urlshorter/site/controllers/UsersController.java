@@ -1,8 +1,8 @@
 package com.urlshorter.site.controllers;
 
-import com.urlshorter.site.audit.AuditProducer;
 import com.urlshorter.site.audit.ActionEnum;
 import com.urlshorter.site.audit.AuditMessage;
+import com.urlshorter.site.audit.Producer;
 import com.urlshorter.site.other.UrlCoderAndDecoder;
 import com.urlshorter.site.models.Link;
 import com.urlshorter.site.models.User;
@@ -34,9 +34,7 @@ public class UsersController {
     @Autowired
     LinkRepository linkRepository;
 
-    @Autowired
-    AuditProducer auditProducer;
-
+    Producer auditProducer = new Producer();
 
     public static void SetUser(User newUser){
         user = newUser;
