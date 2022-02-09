@@ -6,7 +6,7 @@ import com.urlshorter.site.other.WrongConsoleParameterException;
 
 public class Producer {
 
-    public  static  String auditName;
+    public  static  String auditName = "Kafka";
 
     AuditProducer auditProducer;
 
