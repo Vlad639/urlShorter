@@ -34,6 +34,7 @@ public class UsersController {
     @Autowired
     LinkRepository linkRepository;
 
+
     Producer auditProducer = new Producer();
 
     public static void SetUser(User newUser){
